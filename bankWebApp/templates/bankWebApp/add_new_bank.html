@@ -1,0 +1,22 @@
+{%extends "bankWebApp/base.html"%}
+{%block content%}
+
+
+<form method="POST" class=".form-horizontal">{% csrf_token %}
+    <div class="form-group">
+        <label class="control-label col-sm-2">Bank ID: </label>{{form.bank_id}}
+    </div><br>
+    <div class="form-group">
+        <label class="control-label col-sm-2">Bank Name: </label>{{form.bank_name}}
+    </div><br>
+    <div class="form-group">
+        <label class="control-label col-sm-2">City: </label>{{form.bank_city}}
+    </div><br>
+    <div class="form-group">
+        <label class="control-label col-sm-2">IFSC: </label>{{form.bank_ifsc}}
+    </div><br>
+    <div class="form-group">
+        <input class="btn btn-primary" type="submit" value="submit">
+    </div><br>
+</form>
+{%endblock%}

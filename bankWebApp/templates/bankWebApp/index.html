@@ -1,0 +1,27 @@
+{%extends "bankWebApp/base.html"%}
+{%load static%}
+{%block content%}
+
+<div style="padding-bottom:10%;" >
+    <div style="padding-right:24%;padding-left:6%;float:left;">
+        <a href="{% url 'bank_details' %}"><img height="200" width="300" src="{% static 'bankWebApp/bank.jpg' %}"></a>
+        <figcaption>Click to see Bank Database</figcaption>
+    </div>
+
+    <div style="padding-right:6%;">
+        <a href="{% url 'new_customer' %}"><img height="200" width="300" src="{% static 'bankWebApp/newcustomer.jpg' %}"></a><br>
+        <figcaption>Click to Register New Customer</figcaption>
+    </div>
+</div>
+<div style="padding-bottom:10%;">
+<div style="padding-right:24%;padding-left:6%;float:left;" >
+    <a href="{% url 'do_transaction' %}"><img height="200" width="300" src="{% static 'bankWebApp/transaction.jpg' %}"></a>
+    <figcaption>Click to Do Transactions</figcaption>
+</div>
+<div style="padding-right:6%;">
+    <a href="{% url 'add_new_bank' %}"><img height="200" width="300" src="{% static 'bankWebApp/addbank.jpg' %}"></a><br>
+    <figcaption>Click to add New Bank</figcaption>
+
+</div>
+</div>
+{%endblock%}

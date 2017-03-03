@@ -1,0 +1,10 @@
+{% extends "bankWebApp/base.html" %}
+{%block content%}
+    <p>Insufficient Funds</p>
+    <p>You will be redirected in 3 seconds</p>
+    <script>
+        var timer = setTimeout(function() {
+            window.location='http://127.0.0.1:8000/bankWebApp/'
+        }, 3000);
+    </script>
+{%endblock%}

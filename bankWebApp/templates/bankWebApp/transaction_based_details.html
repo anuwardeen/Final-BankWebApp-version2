@@ -1,0 +1,23 @@
+{%extends "bankWebApp/base.html"%}
+{%block content%}
+
+
+<table class="table table-striped">
+        <tr>
+            <th>A/C ID</th>
+            <th>Transaction Details</th>
+            <th>Transaction Amount</th>
+            <th>Updated</th>
+        </tr>
+        {%for item in details%}
+        <tr>
+
+            <td>{{item.act_id}}</td>
+            <td>{{item.transaction_details}}</td>
+            <td>{{item.transaction_amount}}</td>
+            <td>{{item.updated}}</td>
+        </tr>
+        {%endfor%}
+    </table>
+
+{%endblock%}

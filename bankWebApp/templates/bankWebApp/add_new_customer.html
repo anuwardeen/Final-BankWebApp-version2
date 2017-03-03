@@ -1,0 +1,45 @@
+{%extends "bankWebApp/base.html"%}
+{%block content%}
+
+<div class="form-group">
+<form method="POST" class=".form-horizontal">{% csrf_token %}
+    <div class="form-group">
+        <label class="control-label col-sm-2">Full Name: </label>{{form.cust_name}}
+    </div>
+    <div class="form-group">
+        <label class="control-label col-sm-2">Initial Balance:</label> {{form.cust_balance}}
+    </div>
+    <div class="form-group">
+        <label class="control-label col-sm-2">Email Id:</label> {{form.cust_email}}
+    </div>
+
+    <div class="form-group">
+        <label class="control-label col-sm-2">Date Of Birth:</label> {{form.cust_dob}}
+    </div>
+    <div class="form-group">
+        <label class="control-label col-sm-2">Address:</label>
+        <textarea rows="2" cols="25" id="cust_address" name="cust_address"></textarea><br>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-sm-2">Bank:</label>
+        <select name="bank_name" id="bank_name">
+        {%for j in bank_name%}
+        <option value="{{j.bank_name}}">{{j.bank_name}}</option>
+
+        {%endfor%}
+        </select><br>
+    </div>
+
+    <div class="form-group">
+        <label class="control-label col-sm-2">Account: <Type></Type></label>
+        <select name="act_type" id="act_type" class="selectpicker" data-live-search="true" >
+            <option value="SB">Savings</option>
+            <option value="CA">Current</option>
+        </select>
+    </div>
+    <div class="form-group">
+        <input class="btn btn-primary" type="submit" value="submit">
+    </div>
+</form>
+</div>
+{%endblock%}

@@ -1,0 +1,25 @@
+{%extends "bankWebApp/base.html"%}
+{%block content%}
+
+
+<div class="table-responsive" style="padding:20px 20px 20px 20px ">
+        <table class="table table-striped">
+            <tr>
+                <th>Bank ID</th>
+                <th>Bank IFSC</th>
+                <th>Bank Name</th>
+                <th>Bank City</th>
+            </tr>
+
+            {%for item in details%}
+            <tr>
+                <td><a href="{%url 'account_details' item.bank_id %}" >{{item.bank_id}}</a></td>
+                <td>{{item.bank_name}}</td>
+                 <td>{{item.bank_city}}</td>
+                <td>{{item.bank_ifsc}}</td>
+            </tr>
+            {%endfor%}
+        </table>
+    </div>
+
+{%endblock%}

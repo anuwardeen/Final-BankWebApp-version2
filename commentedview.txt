@@ -1,0 +1,89 @@
+
+# @login_required
+# class add_bank(View):
+#     def get(self, request):
+#
+#         form=add_new_bank()
+#         return render(request,"bankWebApp/addingbank.html",{"form":form})
+#
+#
+#
+#     def post(self, request):
+#
+#         form=addingBank(request.POST)
+#         if form.is_valid():
+#             form.save()
+#             return HttpResponse("Bank Added.")
+#         else:
+#             return render(request,"bankWebApp/addingbank.html", {"form": form})
+#
+#
+#
+
+
+
+# @login_required
+# class do_transaction(View):
+#     def get(self,request):
+#         transac_form=do_transaction()
+#         return render(request,"bankWebApp/do_transaction.html",{"form":transac_form})
+#
+#
+#     def post(self,request):
+#         try:
+#             act_balance=account.objects.get(act_id=request.POST.get("act_id")).values("balance")[0]
+#             balance = self.balance_check(act_balance,request.POST.get("transaction_amount"),request.POST.get("transaction_details"))
+#             # balance =self.balance_check(request.POST.get("act_id"),request.POST.get("cust_balance"),request.POST.get("trans_details"))
+#         except Exception as e:
+#             print(e,"hello")
+#             return HttpResponse("this is exception")
+#         else:
+#             act_update=account.objects.filter(act_id=request.POST.get("act_id"))
+#             act_update[0].cust_balance=balance
+#             act_update.save()
+#             # act_id=account.objects.get(act_id=request.POST.get("act_id"))
+#             # transaction.objects.create(act_id=act_id,cust_balance=balance,trans_details=request.POST.get("trans_details")).save()
+#             return HttpResponse("printed")
+
+
+## @login_required
+# class addcustomerBank(View):
+#
+#     def GET(self,request):
+#         regf=add_customer_to_bank()
+#         banks=bank.objects.all().values_list('bank_name','bank_id')
+#         context={"form":regf,"banks":banks}
+#         return render(request, "bankWebApp/add_new_customer.html",context)
+#
+#     def POST(self,request):
+#         bank_id=request.POST.get("bank_id")
+#         new_act_id= self.accountID()
+#         mybank=bank.objects.get(bank_id=bank_id)
+#         new_account=account.objects.create(bank_id=mybank,act_type=request.POST.get("act_type"),act_id=new_act_id)
+#         new_customer=customer.objects.create(request.POST)
+#         new_transaction=transaction.objects.create(act_id=new_customer,transaction_amount=request.POST.get("cust_balance"))
+#         new_transaction.save()
+#         new_customer.save()
+#         new_account.save()
+#         return HttpResponse("hello")
+#         # regf=add_customer_to_bank(request.POST)
+#         # trans=transaction(cust_balance=request.POST.get("balance"))
+#         # trans.act_id=new_account
+#         # trans.save()
+#         # if regf.is_valid():
+#         #     new_customer=regf.save(commit=False)
+#         #     new_customer.act_id=new_account
+#         #     new_customer.save()
+#         #     return HttpResponse("hello")
+#         #
+#         # else:
+#         #     return render(request,"bankWebApp/add_new_customer.html",{"form":regf})
+#
+#     def accountID(self):
+#         if account.objects.all():
+#             actid = account.objects.all().values('act_id').order_by('-act_id')[:1]['act_id']
+#             print(actid)
+#             new_act_id = int(actid) + 1
+#             return new_act_id
+#         else:
+#             return 1000000000

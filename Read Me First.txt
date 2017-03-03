@@ -1,0 +1,17 @@
+Actions You can do with this project:
+
+DashBoard:
+    After Login:
+        first pic: click to see database in tabular format
+        second pic: register new customer to bank
+        third pic: do transaction
+        fouth pic: add new bank
+
+    header section:
+        Transfer Money:
+
+            On Succes:
+                Goes to homepage
+
+            On Failure:
+                Goes to redirected page showing insufficient funds to homepage

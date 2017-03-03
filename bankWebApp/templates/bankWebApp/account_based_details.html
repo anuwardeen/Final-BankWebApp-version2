@@ -1,0 +1,24 @@
+{%extends "bankWebApp/base.html"%}
+{%block content%}
+
+
+<table class="table table-striped">
+
+   <tr>
+        <th>Act ID</th>
+        <th>Bank ID</th>
+        <th>Act Type</th>
+    </tr>
+
+    {%for item in details%}
+    <tr>
+        <td><a href="{% url 'customer_details' item.act_id %}" >{{item.act_id}}</a></td>
+        <td>{{item.bank_id}}</td>
+        <td>{{item.act_type}}</td>
+    </tr>
+    {%endfor%}
+
+</table>
+
+
+{%endblock%}
