@@ -161,7 +161,7 @@ def add_bank(request):
 
         if form.is_valid():
             form.save()
-            return render(request, "bankWebApp/add_new_bank.html")
+            return render(request, "bankWebApp/add_new_bank.html",{'form':add_new_bank()})
 
         else:
             return render(
