@@ -1,7 +1,5 @@
 from django.core.management import BaseCommand
-# from bankWebApp.models import *
-# from ...models import *
-from ...views import *
+from ...models import *
 
 class Command(BaseCommand):
     help = "My test command"
@@ -29,6 +27,8 @@ class Command(BaseCommand):
             act_id_starts_from=1000000000
         self.creating_records(no_of_banks ,no_of_customer,no_of_accounts,bank_id_starts_from,act_id_starts_from)
 
+#################################################################################################################
+
     def creating_records(self,no_of_banks ,no_of_customer,no_of_accounts, bank_id_starts_from,act_id_starts_from):
         bank_queries=[]
         account_queries = []
@@ -55,26 +55,28 @@ class Command(BaseCommand):
 
             bank_queries.append(new_bank)
 
-            bank_queries.clear()
-            customer_queries.clear()
-            transaction_queries.clear()
-            account_queries.clear()
         self.commit(bank_queries, customer_queries, transaction_queries, account_queries)
 
+
+
     def commit(self,bank_queries,customer_queries,transaction_queries,account_queries):
-        b=bank.objects.bulk_create(bank_queries)
-        a=account.objects.bulk_create(account_queries)
-        c=customer.objects.bulk_create(customer_queries)
-        t=transaction.objects.bulk_create(transaction_queries)
-        print(b,a,c,t)
-        print(bank_queries,customer_queries,transaction_queries)
+        bank.objects.bulk_create(bank_queries)
+        account.objects.bulk_create(account_queries)
+        customer.objects.bulk_create(customer_queries)
+        transaction.objects.bulk_create(transaction_queries)
+
+    #################################################################################################################
+
+
+
+
+
 
     def getting_new_bank_id(self,last_id):
         num = 0
         for i in last_id:
             if i.isdigit():
                 num = num * 10 + int(i)
-
 
         num+=1
         if num <= 9:
