@@ -1,4 +1,5 @@
 from django.db import models
+from django.contrib.auth.models import User
 
 
 class bank(models.Model):
@@ -63,3 +64,7 @@ class transaction(models.Model):
 #     pan_id=models.CharField(max_length=10,default="XXXXXXXXXX")
 #     driving_license
 #
+
+class userPermission(models.Model):
+    user=models.ForeignKey(User,on_delete=models.CASCADE)
+    bank_id = models.CharField(max_length=3)

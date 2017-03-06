@@ -21,6 +21,12 @@ urlpatterns = (
 
     url(r'^register/NewUser/', views.add_new_user.as_view(), name="add_new_user"),
 
-    url(r'transfer/money/',views.transfer_money.as_view(),name="transfer_money"),
+    url(r'^transfer/money/$',views.transfer_money.as_view(),name="transfer_money"),
+
+    url(r'^delete/$',views.deleteing_data,name="delete_data"),
+
+    url(r'^delete/bank/$',views.deleting_bank,name="delete_bank"),
+
+    url(r'^delete/account$',views.delete_account,name="delete_account"),
 
 )

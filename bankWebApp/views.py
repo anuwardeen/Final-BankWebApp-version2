@@ -4,48 +4,86 @@ from .models import *
 from django.views import View
 from .forms import *
 from django.contrib.auth.models import User
-from django.contrib.auth.views import login
-from django.contrib.auth.decorators import login_required
+# from django.contrib.auth.views import login
+from django.contrib.auth.decorators import login_required,user_passes_test
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.urls import reverse
+
+
 
 
 @login_required
 def index(request):
-    return render(request, "bankWebApp/index.html")
-
+    user=request.user
+    if user.is_superuser:
+        print(user)
+        return render(request, "bankWebApp/index.html")
+    else :
+        bank_id = userPermission.objects.filter(user=request.user).values('bank_id')[0]['bank_id']
+        return HttpResponseRedirect(reverse('account_details', args=[bank_id]))
 
 @login_required
 def bank_based_details(request):
-    bank_details = bank.objects.all()
-    context = {"details": bank_details}
-    return render(request, "bankWebApp/bank_based_details.html",
-                  context=context)
+    if request.user.is_superuser:
+        bank_details = bank.objects.all()
+        context = {"details": bank_details}
+        return render(request, "bankWebApp/bank_based_details.html",
+                      context=context)
+    else:
+        return HttpResponseRedirect(reverse("index"))
 
 
 @login_required
 def accounts_based_details(request, bank_id):
-    act_details = account.objects.all().filter(bank_id=bank_id)
-    context = {"details": act_details}
-    return render(
-        request, "bankWebApp/account_based_details.html", context=context)
+    if request.user.is_superuser:
+        act_details = account.objects.all().filter(bank_id=bank_id)
+        context = {"details": act_details}
+        return render(request, "bankWebApp/account_based_details.html", context=context)
+    else:
+        bank_id=userPermission.objects.filter(user=request.user).values()[0]['bank_id']
+        act_details = account.objects.all().filter(bank_id=bank_id)
+        context = {"details": act_details}
+        return render(request, "bankWebApp/account_based_details.html", context=context)
+
+
 
 
 @login_required
 def customers_based_details(request, act_id):
+    if request.user.is_superuser:
+        cust_details = customer.objects.all().filter(act_id=act_id)
+        context = {"cust_details": cust_details}
+        return render(request, "bankWebApp/customer_based_details.html", context=context)
+    else:
+        bank_id = userPermission.objects.filter(user=request.user).values()[0]['bank_id']
+        print(bank_id)
+        if account.objects.filter(act_id=act_id,bank_id=bank_id):
+            cust_details = customer.objects.all().filter(act_id=act_id)
+            context = {"cust_details": cust_details}
+            return render(request, "bankWebApp/customer_based_details.html", context=context)
+        else:
+            return HttpResponse("Invalid account ID for this bank")
 
-    cust_details = customer.objects.all().filter(act_id=act_id)
-    context = {"cust_details": cust_details}
-    return render(
-        request, "bankWebApp/customer_based_details.html", context=context)
+
+
 
 
 @login_required
 def transactions_based_details(request, act_id):
+    if request.user.is_superuser:
+        trans_details = transaction.objects.all().filter(act_id=act_id)
+        context = {"details": trans_details}
+        return render(request, "bankWebApp/transaction_based_details.html", context=context)
 
-    trans_details = transaction.objects.all().filter(act_id=act_id)
-    context = {"details": trans_details}
-    return render(
-        request, "bankWebApp/transaction_based_details.html", context=context)
+    else:
+        bank_id = userPermission.objects.filter(user=request.user).values()[0]['bank_id']
+        if account.objects.filter(act_id=act_id, bank_id=bank_id):
+            trans_details = transaction.objects.all().filter(act_id=act_id)
+            context = {"details": trans_details}
+            return render(request, "bankWebApp/transaction_based_details.html", context=context)
+        else:
+            return HttpResponse("Invalid account ID for this bank")
+
 
 
 @login_required
@@ -134,8 +172,7 @@ def do_transaction(request):
 
     else:
 
-        return render(request, "bankWebApp/do_transactions.html",
-                      {"form": transac_form})
+        return render(request, "bankWebApp/do_transactions.html",{"form": transac_form})
 
 
 def balance_check(act_balance, transaction_amount, transaction_details):
@@ -153,7 +190,9 @@ def balance_check(act_balance, transaction_amount, transaction_details):
         raise Exception
 
 
+
 @login_required
+@user_passes_test(lambda u : u.is_superuser)
 def add_bank(request):
 
     if request.method == "POST":
@@ -171,7 +210,8 @@ def add_bank(request):
         return render(request, "bankWebApp/add_new_bank.html", {"form": form})
 
 
-class add_new_user(View):
+
+class add_new_user(LoginRequiredMixin, View):
 
     def get(self, request):
         return render(request, "registration/user_registration.html")
@@ -180,7 +220,9 @@ class add_new_user(View):
         form = User.objects.create_user(
             request.POST.get("usernamesignup"),
             request.POST.get("emailsignup"),
-            request.POST.get("passwordsignup"))
+            request.POST.get("passwordsignup"),is_staff=True)
+        user=userPermission.objects.create(user=form,bank_id=request.POST.get("bank_id"))
+
         return render(request, "registration/login.html")
 
 
@@ -188,9 +230,14 @@ class add_new_user(View):
 class transfer_money(LoginRequiredMixin, View):
 
     def get(self, request):
-        accounts = account.objects.all()
-        return render(request, "bankWebApp/transfer_money.html",
-                      {"accounts": accounts})
+        if request.user.is_superuser:
+            accounts = account.objects.all()
+            return render(request, "bankWebApp/transfer_money.html",{"accounts": accounts})
+        else:
+            bank_id = userPermission.objects.filter(user=request.user).values()[0]['bank_id']
+            accounts=account.objects.filter(bank_id=bank_id)
+            return render(request, "bankWebApp/transfer_money.html", {"accounts": accounts})
+
 
     def balance_check(self, act_balance, transaction_amount,
                       transaction_details):
@@ -205,6 +252,7 @@ class transfer_money(LoginRequiredMixin, View):
 
         else:
             raise Exception
+
 
     def post(self, request):
         from_act_id = request.POST.get("from_act_id")
@@ -249,6 +297,49 @@ class transfer_money(LoginRequiredMixin, View):
                 transaction_amount=transaction_amount)
             return HttpResponseRedirect(reverse("index"))
 
-#
-# def total_no_of_accounts(request,cust_name,cust_dob):
-#
+
+
+@login_required
+def deleteing_data(request):
+    return render(request,"bankWebApp/delete_data.html")
+
+
+
+
+@login_required
+def deleting_bank(request):
+    if request.method=="GET":
+        if request.user.is_superuser:
+            banks=bank.objects.all()
+            return render(request,"bankWebApp/delete_bank.html",{"bank":banks})
+        else:
+            return HttpResponse("You cannot delete bank")
+
+    else:
+        bankIDS=request.POST.getlist("bank_id")
+        for i in bankIDS:
+            bank.objects.get(bank_id=i).delete()
+        return render(request, "bankWebApp/index.html")
+
+
+
+
+@login_required
+def delete_account(request):
+    if request.method=="GET":
+        if request.user.is_superuser:
+            accounts=account.objects.all()
+            print(accounts)
+            return render(request,"bankWebApp/delete_account.html",{"account":accounts})
+        else:
+            bank_id = userPermission.objects.filter(user=request.user).values()[0]['bank_id']
+            accounts = account.objects.filter(bank_id=bank_id)
+            print(accounts)
+            return render(request, "bankWebApp/delete_account.html", {"account": accounts})
+
+
+    else:
+        actIDS=request.POST.getlist("act_id")
+        for i in actIDS:
+            account.objects.get(act_id=i).delete()
+        return render(request, "bankWebApp/index.html")

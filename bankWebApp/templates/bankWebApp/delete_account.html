@@ -1,0 +1,21 @@
+{% extends "bankWebApp/base.html" %}
+{%block content%}
+
+<div id="register" class="animate form">
+    <form  method="POST" autocomplete="on" class="form-horizontal">{% csrf_token %}
+        <div class="form-group">
+
+            {%for i in account%}
+
+            <input type="checkbox" name="act_id" value="{{i.act_id}}"><pre>{{i.act_id}}    {{i.bank_id}}    {{i.act_type}}</pre><br>
+            {% endfor %}
+
+            <div class="form-group">
+                <input class="btn btn-primary" type="submit" value="submit">
+            </div>
+        </div>
+    </form>
+</div>
+
+
+{%endblock%}

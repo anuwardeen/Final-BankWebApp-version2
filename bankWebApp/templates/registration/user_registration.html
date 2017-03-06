@@ -1,4 +1,4 @@
-{% extends "registration/base.html" %}
+{% extends "bankWebApp/base.html" %}
 {%block content%}
 
 <div id="register" class="animate form">
@@ -19,6 +19,10 @@
         <p>
             <label for="passwordsignup_confirm" class="youpasswd" >Please confirm your password </label>
             <input id="passwordsignup_confirm" name="passwordsignup_confirm" required="required" type="password" placeholder="eg. X8df!90EO"/>
+        </p>
+        <p>
+            <label for="bank_id" class="uname" >Bank Id:</label>
+            <input id="bank_id" name="bank_id" required="required" type="text" placeholder="mysuperusername690" />
         </p>
         <p class="signin button">
             <input type="submit" value="Sign up"/>
